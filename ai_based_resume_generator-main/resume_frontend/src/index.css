@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* === PRINT SETTINGS (Single & Optimized) === */
+@media print {
+  /* 1. Page Setup */
+  @page {
+    size: A4;
+    margin: 0mm; /* Browser ka default margin hatana */
+  }
+
+  /* 2. Body Settings - Background White & Text Adjustment */
+  body, html, #root {
+    margin: 0 !important;
+    padding: 0 !important;
+    background-color: white !important;
+    height: 100% !important;
+    width: 100% !important;
+    -webkit-print-color-adjust: exact !important; /* Colors print mein dikhane ke liye */
+    print-color-adjust: exact !important;
+    overflow: visible !important;
+  }
+
+  /* 3. Website UI Elements Chupana (Navbar, Buttons, Steps, Drawer, Sidebar) */
+  nav, 
+  header, 
+  footer, 
+  button, 
+  .navbar, 
+  .steps, 
+  .btn, 
+  .menu, 
+  .drawer, 
+  .drawer-side, 
+  .no-print {
+    display: none !important;
+  }
+
+  /* 4. Resume Container ko A4 par Perfect Fit karna */
+  #resume-area {
+    width: 210mm !important; /* A4 Width */
+    min-height: 297mm !important; /* A4 Height */
+    margin: 0 auto !important; /* Center align */
+    padding: 10mm !important; /* Side se thoda gap taaki text kate na */
+    box-shadow: none !important;
+    border: none !important;
+    background-color: white !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    z-index: 9999; 
+  }
+
+ 
+  .break-inside-avoid {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    display: block; 
+  }
+
+
+  * {
+    color-adjust: exact !important;
+    -webkit-print-color-adjust: exact !important;
+  }
+}
+
+#resume-area h1, 
+#resume-area h2, 
+#resume-area h3, 
+#resume-area h4,
+#resume-area h5, 
+#resume-area h6 {
+  color: #000000 !important;
+}
+
+
+/* #resume-area svg { color: #000000 !important; } */

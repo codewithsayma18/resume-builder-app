@@ -1,0 +1,43 @@
+/* === PRINT SETTINGS (Ye code copy-paste karo) === */
+@media print {
+  /* 1. Website ka UI (Navbar, Steps, Buttons) chhupana */
+  nav, .navbar, header, footer, .steps, .btn, .menu, .drawer-side {
+    display: none !important;
+  }
+
+  /* 2. Page ka background white karna */
+  body, html, #root {
+    background-color: white !important;
+    height: auto !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  /* 3. Resume Container ko page par fit karna */
+  /* Note: Agar tumhara resume container ka class alag hai toh yahan change karna */
+  .max-w-4xl {
+    max-width: 100% !important;
+    width: 100% !important;
+    box-shadow: none !important; /* Shadow hatana */
+    border: none !important;     /* Border hatana */
+    margin: 0 !important;
+    padding: 10mm !important;    /* Thoda sa padding taaki kinare na katein */
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+  }
+
+  /* 4. Page Break Fix: Taaki text aadha doosre page par na kate */
+  section, .card, .mb-4 {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  
+  /* 5. Colors ko accurate rakhna */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}
