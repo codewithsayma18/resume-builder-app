@@ -6,6 +6,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.core.io.ClassPathResource;
@@ -17,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Service
 public class ResumeServiceImpl implements ResumeService {
 
+    private static final Logger logger = LoggerFactory.getLogger(ResumeServiceImpl.class);
     private final ChatClient chatClient;
 
     public ResumeServiceImpl(ChatClient.Builder builder) {
@@ -25,19 +28,27 @@ public class ResumeServiceImpl implements ResumeService {
 
     @Override
     public Map<String, Object> generateResumeResponse(String userResumeDescription) throws IOException {
-
+        
+        // 1. Prompt file load karo
         String promptString = this.loadPromptFromFile("resume_prompt.txt");
+        
+        // 2. Dynamic values replace karo
         String promptContent = this.putValuesToTemplate(promptString, Map.of(
                 "userDescription", userResumeDescription
         ));
         
+        // 3. AI ko call karo
         Prompt prompt = new Prompt(promptContent);
         String response = chatClient.prompt(prompt).call().content();
         
+        // Logger me response print karo taki pata chale AI ne kya bheja
+        logger.info("AI Response received: {}", response);
+
+        // 4. Response parse karke return karo
         return parseMultipleResponses(response);
     }
 
-    // UPDATED: Docker aur Cloud (Render) ke liye sahi tareeka file padhne ka
+    // Docker/Cloud compatible file loader
     String loadPromptFromFile(String filename) throws IOException {
         Resource resource = new ClassPathResource(filename);
         try (InputStream inputStream = resource.getInputStream()) {
@@ -55,27 +66,27 @@ public class ResumeServiceImpl implements ResumeService {
     public static Map<String, Object> parseMultipleResponses(String response) {
         Map<String, Object> jsonResponse = new HashMap<>();
 
-        // 1. Extract content inside <think> tags (Gemini mostly won't use this, but kept for safety)
-        int thinkStart = response.indexOf("<think>") + 7;
+        // 1. Extract content inside <think> tags (Optional handling)
+        int thinkStart = response.indexOf("<think>");
         int thinkEnd = response.indexOf("</think>");
-        if (thinkStart > 6 && thinkEnd != -1) {
-            String thinkContent = response.substring(thinkStart, thinkEnd).trim();
+        if (thinkStart != -1 && thinkEnd != -1) {
+            String thinkContent = response.substring(thinkStart + 7, thinkEnd).trim();
             jsonResponse.put("think", thinkContent);
+            // Main response se think tag hata do taki JSON parsing clean rahe
+            response = response.substring(thinkEnd + 8).trim(); 
         } else {
             jsonResponse.put("think", null);
         }
 
-        // 2. Extract content that is in JSON format
-        // Gemini updates: Handle cases with and without markdown code blocks
+        // 2. Extract JSON content
         String jsonContent = response;
         int jsonStart = response.indexOf("```json");
         int jsonEnd = response.lastIndexOf("```");
 
         if (jsonStart != -1 && jsonEnd != -1 && jsonEnd > jsonStart) {
-            // Agar markdown blocks hain toh unhe use karo
             jsonContent = response.substring(jsonStart + 7, jsonEnd).trim();
         } else {
-            // Agar markdown nahi hai, toh dekho shayad seedha JSON start ho raha ho '{' se
+            // Fallback: Agar markdown nahi hai toh '{' aur '}' dhoondo
             int firstBrace = response.indexOf("{");
             int lastBrace = response.lastIndexOf("}");
             if (firstBrace != -1 && lastBrace != -1) {
@@ -88,10 +99,9 @@ public class ResumeServiceImpl implements ResumeService {
             Map<String, Object> dataContent = objectMapper.readValue(jsonContent, Map.class);
             jsonResponse.put("data", dataContent);
         } catch (Exception e) {
+            logger.error("JSON Parsing Failed. Raw Response: {}", response, e);
             jsonResponse.put("data", null);
-            System.err.println("Invalid JSON format in the response: " + e.getMessage());
-            // Debugging ke liye raw response print kar sakte hain
-            System.err.println("Raw Response: " + response);
+            jsonResponse.put("error", "Invalid JSON format received from AI");
         }
 
         return jsonResponse;
