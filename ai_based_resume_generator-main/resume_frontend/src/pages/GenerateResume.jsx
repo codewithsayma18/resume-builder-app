@@ -194,7 +194,7 @@ const GenerateResume = () => {
               // SHOW INPUT FORM
               <>
                 <h1 className="text-3xl font-bold flex justify-center items-center gap-2 mb-2">
-                  <FaBrain className="text-primary" /> Gen Z Resume Builder
+                  <FaBrain className="text-primary" /> Professional AI Resume Builder
                 </h1>
                 <p className="text-gray-500 mb-6">Enter your details and let our Local AI build your resume.</p>
 

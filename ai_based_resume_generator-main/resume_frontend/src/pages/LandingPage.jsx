@@ -1,6 +1,5 @@
 import React from "react";
-// ❌ Maine yahan se Router aur Link wala import HATA DIYA hai.
-// Sirf Image import rakha hai.
+
 
 import hamidPic from "../assets/HAMIDALI.jpg";
 import samiyaPic from "../assets/image.png";
@@ -38,7 +37,7 @@ const LandingPage = () => {
             <div className="card bg-base-200 shadow-xl">
               <div className="card-body items-center text-center">
                 <div className="text-4xl mb-4">🚀</div>
-                <h3 className="card-title">AI-Powered</h3>
+                <h3 className="card-title"></h3>
               </div>
             </div>
             <div className="card bg-base-200 shadow-xl">

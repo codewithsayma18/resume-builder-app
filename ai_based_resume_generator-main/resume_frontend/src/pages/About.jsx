@@ -9,7 +9,7 @@ const About = () => {
       {/* Hero Section */}
       <div className="text-center py-16 px-6 bg-gray-50 border-b border-gray-200">
         <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6">
-          About <span className="text-blue-600">Gen Z Resume Builder</span>
+          About <span className="text-blue-600">Professional AI Resume Builder</span>
         </h1>
         <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
           We are on a mission to simplify the job application process. 
