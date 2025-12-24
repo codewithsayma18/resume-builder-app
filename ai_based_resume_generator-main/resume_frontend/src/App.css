@@ -138,4 +138,28 @@ body {
   border-radius: 4px;
   font-size: 14px;
   font-weight: 500;
+}/* Logo Styling */
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.site-logo {
+  height: 60px;
+  width: auto;
+  object-fit: contain;
+}
+
+
+@media (max-width: 600px) {
+  .header-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .site-logo {
+    height: 50px;
+  }
 }

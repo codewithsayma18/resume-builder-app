@@ -2,6 +2,8 @@ import { useState, useRef } from 'react';
 import { useReactToPrint } from 'react-to-print';
 import './App.css';
 
+import logo from './assets/logo.png'; 
+
 function App() {
   const [description, setDescription] = useState('');
   const [resumeData, setResumeData] = useState(null);
@@ -46,7 +48,11 @@ function App() {
 
   return (
     <div className="container">
-      <h1>🚀 AI Resume Generator</h1>
+    {/* Purana <h1> hata kar ye lagayein */}
+<div className="header-container">
+  <img src={logo} alt="Site Logo" className="site-logo" />
+  <h1>Professional AI Resume Builder</h1>
+</div>
       <p>Enter your details and let AI design your professional resume.</p>
 
       {/* Input Section */}
