@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import { useReactToPrint } from 'react-to-print';
 import './App.css';
 
 function App() {
@@ -6,6 +7,14 @@ function App() {
   const [resumeData, setResumeData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  // Ye reference batayega ki konsa hissa PDF banana hai
+  const resumeRef = useRef();
+
+  const handlePrint = useReactToPrint({
+    contentRef: resumeRef,
+    documentTitle: 'My_AI_Resume',
+  });
 
   const generateResume = async () => {
     if (!description) {
@@ -48,15 +57,29 @@ function App() {
         placeholder="E.g., I am a Full Stack Developer with 3 years experience in React and Node.js..."
       />
       
-      <button className="generate-btn" onClick={generateResume} disabled={loading}>
-        {loading ? '✨ Creating Resume...' : 'Generate Resume'}
-      </button>
+      <div className="button-group">
+        <button className="generate-btn" onClick={generateResume} disabled={loading}>
+          {loading ? '✨ Creating Resume...' : 'Generate Resume'}
+        </button>
+
+        {/* Download Button Tabhi dikhega jab Resume generate ho jayega */}
+        {resumeData && (
+          <button 
+            onClick={handlePrint}
+            style={{ marginLeft: '10px', backgroundColor: '#dc3545', color: 'white' }}
+            className="generate-btn"
+          >
+            📥 Download PDF
+          </button>
+        )}
+      </div>
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
       {/* ---- RESUME DISPLAY SECTION ---- */}
+      {/* ref={resumeRef} lagane se computer ko pata chalta hai ki bas yahi print karna hai */}
       {resumeData && (
-        <div className="resume-paper">
+        <div className="resume-paper" ref={resumeRef}>
           
           {/* Header */}
           <div className="resume-header">
